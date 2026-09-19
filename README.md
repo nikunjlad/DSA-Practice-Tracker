@@ -88,3 +88,6 @@ Progress lives in localStorage under `patternreps/*` keys, one JSON value per
 document (`categories/<key>`, `progress/<slug>`, `completions/<date>`,
 `customProblems/<slug>`). The Patterns tab has **Export backup** (downloads
 JSON) and **Import backup** (restores it) for moving between devices.
+
+## Future Things to consider
+For a personal tool, the project-site URL is usually the wiser spend — it's one path segment longer but keeps your root URL free. A middle option since you own nikunjlad.dev: add a custom domain like dsa.nikunjlad.dev to the Pages repo (one CNAME record at your DNS, one line in Pages settings) — short URL, root stays free, and it's a subdomain so it doesn't touch your main site.
