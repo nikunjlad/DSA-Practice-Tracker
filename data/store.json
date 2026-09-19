@@ -1,0 +1,421 @@
+{
+ "assignments/2026-09-19": {
+  "catCount": 0,
+  "date": "2026-09-19",
+  "items": []
+ },
+ "progress/01-matrix": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "01-matrix",
+  "solvedCount": 1
+ },
+ "progress/3sum": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "3sum",
+  "solvedCount": 1
+ },
+ "progress/3sum-closest": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "3sum-closest",
+  "solvedCount": 1
+ },
+ "progress/4sum": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "4sum",
+  "solvedCount": 1
+ },
+ "progress/best-time-to-buy-and-sell-stock": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "best-time-to-buy-and-sell-stock",
+  "solvedCount": 1
+ },
+ "progress/best-time-to-buy-and-sell-stock-ii": {
+  "key": "greedy",
+  "lastSolved": "2026-09-12",
+  "slug": "best-time-to-buy-and-sell-stock-ii",
+  "solvedCount": 1
+ },
+ "progress/binary-tree-level-order-traversal": {
+  "key": "trees-bfs",
+  "lastSolved": "2026-09-12",
+  "slug": "binary-tree-level-order-traversal",
+  "solvedCount": 1
+ },
+ "progress/binary-tree-level-order-traversal-ii": {
+  "key": "trees-bfs",
+  "lastSolved": "2026-09-12",
+  "slug": "binary-tree-level-order-traversal-ii",
+  "solvedCount": 1
+ },
+ "progress/car-pooling": {
+  "key": "intervals",
+  "lastSolved": "2026-09-12",
+  "slug": "car-pooling",
+  "solvedCount": 1
+ },
+ "progress/clone-graph": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "clone-graph",
+  "solvedCount": 1
+ },
+ "progress/coin-change": {
+  "key": "dp-1d",
+  "lastSolved": "2026-09-12",
+  "slug": "coin-change",
+  "solvedCount": 1
+ },
+ "progress/container-with-most-water": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "container-with-most-water",
+  "solvedCount": 1
+ },
+ "progress/contiguous-array": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "contiguous-array",
+  "solvedCount": 1
+ },
+ "progress/continuous-subarray-sum": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "continuous-subarray-sum",
+  "solvedCount": 1
+ },
+ "progress/corporate-flight-bookings": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "corporate-flight-bookings",
+  "solvedCount": 1
+ },
+ "progress/course-schedule": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "course-schedule",
+  "solvedCount": 1
+ },
+ "progress/find-first-and-last-position-of-element-in-sorted-array": {
+  "key": "binary-search",
+  "lastSolved": "2026-09-12",
+  "slug": "find-first-and-last-position-of-element-in-sorted-array",
+  "solvedCount": 1
+ },
+ "progress/find-minimum-in-rotated-sorted-array": {
+  "key": "binary-search",
+  "lastSolved": "2026-09-12",
+  "slug": "find-minimum-in-rotated-sorted-array",
+  "solvedCount": 1
+ },
+ "progress/find-pivot-index": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "find-pivot-index",
+  "solvedCount": 1
+ },
+ "progress/flipping-an-image": {
+  "key": "matrix",
+  "lastSolved": "2026-09-12",
+  "slug": "flipping-an-image",
+  "solvedCount": 1
+ },
+ "progress/house-robber": {
+  "key": "dp-1d",
+  "lastSolved": "2026-09-12",
+  "slug": "house-robber",
+  "solvedCount": 1
+ },
+ "progress/image-smoother": {
+  "key": "matrix",
+  "lastSolved": "2026-09-12",
+  "slug": "image-smoother",
+  "solvedCount": 1
+ },
+ "progress/is-subsequence": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "is-subsequence",
+  "solvedCount": 1
+ },
+ "progress/linked-list-cycle": {
+  "key": "linked-list",
+  "lastSolved": "2026-09-12",
+  "slug": "linked-list-cycle",
+  "solvedCount": 1
+ },
+ "progress/longest-alternating-subarray": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "longest-alternating-subarray",
+  "solvedCount": 1
+ },
+ "progress/longest-common-prefix": {
+  "key": "tries",
+  "lastSolved": "2026-09-12",
+  "slug": "longest-common-prefix",
+  "solvedCount": 1
+ },
+ "progress/longest-repeating-character-replacement": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "longest-repeating-character-replacement",
+  "solvedCount": 1
+ },
+ "progress/longest-substring-without-repeating-characters": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "longest-substring-without-repeating-characters",
+  "solvedCount": 1
+ },
+ "progress/map-of-highest-peak": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "map-of-highest-peak",
+  "solvedCount": 1
+ },
+ "progress/max-area-of-island": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "max-area-of-island",
+  "solvedCount": 1
+ },
+ "progress/max-number-of-k-sum-pairs": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "max-number-of-k-sum-pairs",
+  "solvedCount": 1
+ },
+ "progress/maximum-absolute-sum-of-any-subarray": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "maximum-absolute-sum-of-any-subarray",
+  "solvedCount": 1
+ },
+ "progress/maximum-average-subarray-i": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "maximum-average-subarray-i",
+  "solvedCount": 1
+ },
+ "progress/maximum-population-year": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "maximum-population-year",
+  "solvedCount": 1
+ },
+ "progress/maximum-product-subarray": {
+  "key": "dp-1d",
+  "lastSolved": "2026-09-12",
+  "slug": "maximum-product-subarray",
+  "solvedCount": 1
+ },
+ "progress/maximum-subarray": {
+  "key": "dp-1d",
+  "lastSolved": "2026-09-12",
+  "slug": "maximum-subarray",
+  "solvedCount": 1
+ },
+ "progress/maximum-sum-of-distinct-subarrays-with-length-k": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "maximum-sum-of-distinct-subarrays-with-length-k",
+  "solvedCount": 1
+ },
+ "progress/merge-sorted-array": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "merge-sorted-array",
+  "solvedCount": 1
+ },
+ "progress/merge-two-sorted-lists": {
+  "key": "linked-list",
+  "lastSolved": "2026-09-12",
+  "slug": "merge-two-sorted-lists",
+  "solvedCount": 1
+ },
+ "progress/middle-of-the-linked-list": {
+  "key": "linked-list",
+  "lastSolved": "2026-09-12",
+  "slug": "middle-of-the-linked-list",
+  "solvedCount": 1
+ },
+ "progress/minimum-number-of-food-buckets-to-feed-the-hamsters": {
+  "key": "greedy",
+  "lastSolved": "2026-09-12",
+  "slug": "minimum-number-of-food-buckets-to-feed-the-hamsters",
+  "solvedCount": 1
+ },
+ "progress/minimum-size-subarray-sum": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "minimum-size-subarray-sum",
+  "solvedCount": 1
+ },
+ "progress/minimum-window-substring": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "minimum-window-substring",
+  "solvedCount": 1
+ },
+ "progress/next-permutation": {
+  "key": "arrays-hashing",
+  "lastSolved": "2026-09-12",
+  "slug": "next-permutation",
+  "solvedCount": 1
+ },
+ "progress/number-of-islands": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "number-of-islands",
+  "solvedCount": 1
+ },
+ "progress/number-of-operations-to-make-network-connected": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "number-of-operations-to-make-network-connected",
+  "solvedCount": 1
+ },
+ "progress/number-of-provinces": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "number-of-provinces",
+  "solvedCount": 1
+ },
+ "progress/palindrome-number": {
+  "key": "arrays-hashing",
+  "lastSolved": "2026-09-12",
+  "slug": "palindrome-number",
+  "solvedCount": 1
+ },
+ "progress/permutation-in-string": {
+  "key": "sliding-window",
+  "lastSolved": "2026-09-12",
+  "slug": "permutation-in-string",
+  "solvedCount": 1
+ },
+ "progress/product-of-array-except-self": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "product-of-array-except-self",
+  "solvedCount": 1
+ },
+ "progress/range-sum-query-immutable": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "range-sum-query-immutable",
+  "solvedCount": 1
+ },
+ "progress/redundant-connection": {
+  "key": "graphs",
+  "lastSolved": "2026-09-12",
+  "slug": "redundant-connection",
+  "solvedCount": 1
+ },
+ "progress/remove-duplicates-from-sorted-array": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "remove-duplicates-from-sorted-array",
+  "solvedCount": 1
+ },
+ "progress/remove-duplicates-from-sorted-list": {
+  "key": "linked-list",
+  "lastSolved": "2026-09-12",
+  "slug": "remove-duplicates-from-sorted-list",
+  "solvedCount": 1
+ },
+ "progress/remove-element": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "remove-element",
+  "solvedCount": 1
+ },
+ "progress/reverse-linked-list": {
+  "key": "linked-list",
+  "lastSolved": "2026-09-12",
+  "slug": "reverse-linked-list",
+  "solvedCount": 1
+ },
+ "progress/rotate-image": {
+  "key": "matrix",
+  "lastSolved": "2026-09-12",
+  "slug": "rotate-image",
+  "solvedCount": 1
+ },
+ "progress/running-sum-of-1d-array": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "running-sum-of-1d-array",
+  "solvedCount": 1
+ },
+ "progress/search-a-2d-matrix": {
+  "key": "binary-search",
+  "lastSolved": "2026-09-12",
+  "slug": "search-a-2d-matrix",
+  "solvedCount": 1
+ },
+ "progress/search-in-rotated-sorted-array": {
+  "key": "binary-search",
+  "lastSolved": "2026-09-12",
+  "slug": "search-in-rotated-sorted-array",
+  "solvedCount": 1
+ },
+ "progress/search-in-rotated-sorted-array-ii": {
+  "key": "binary-search",
+  "lastSolved": "2026-09-12",
+  "slug": "search-in-rotated-sorted-array-ii",
+  "solvedCount": 1
+ },
+ "progress/shifting-letters-ii": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "shifting-letters-ii",
+  "solvedCount": 1
+ },
+ "progress/subarray-sum-equals-k": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "subarray-sum-equals-k",
+  "solvedCount": 1
+ },
+ "progress/subarray-sums-divisible-by-k": {
+  "key": "prefix-sum",
+  "lastSolved": "2026-09-12",
+  "slug": "subarray-sums-divisible-by-k",
+  "solvedCount": 1
+ },
+ "progress/transpose-matrix": {
+  "key": "matrix",
+  "lastSolved": "2026-09-12",
+  "slug": "transpose-matrix",
+  "solvedCount": 1
+ },
+ "progress/trapping-rain-water": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "trapping-rain-water",
+  "solvedCount": 1
+ },
+ "progress/two-sum": {
+  "key": "arrays-hashing",
+  "lastSolved": "2026-09-12",
+  "slug": "two-sum",
+  "solvedCount": 1
+ },
+ "progress/two-sum-ii-input-array-is-sorted": {
+  "key": "two-pointers",
+  "lastSolved": "2026-09-12",
+  "slug": "two-sum-ii-input-array-is-sorted",
+  "solvedCount": 1
+ },
+ "progress/valid-parentheses": {
+  "key": "stack",
+  "lastSolved": "2026-09-12",
+  "slug": "valid-parentheses",
+  "solvedCount": 1
+ }
+}

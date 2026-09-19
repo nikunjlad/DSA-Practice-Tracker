@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pattern Reps</title>
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg: #F5F6F3;
+    --surface: #FFFFFF;
+    --surface2: #EDEFEA;
+    --ink: #1B2437;
+    --muted: #5A6478;
+    --line: #DCE0E6;
+    --accent: #2450D8;
+    --accent-soft: #E4EAFB;
+    --on-accent: #FFFFFF;
+    --easy: #1E8A5A;
+    --easy-soft: #E2F2EA;
+    --med: #A86A08;
+    --med-soft: #F7ECD8;
+    --hard: #C0392B;
+    --hard-soft: #F8E4E1;
+    --done: #1E8A5A;
+    --miss: #C8CDD6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F131C;
+      --surface: #171E2C;
+      --surface2: #1E2637;
+      --ink: #E9EDF5;
+      --muted: #98A2B8;
+      --line: #2A3347;
+      --accent: #7D96FF;
+      --accent-soft: #232E4E;
+      --on-accent: #0F131C;
+      --easy: #4CC38A;
+      --easy-soft: #16301F;
+      --med: #E2B155;
+      --med-soft: #33270E;
+      --hard: #E5776A;
+      --hard-soft: #371713;
+      --done: #4CC38A;
+      --miss: #333C4E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F131C; --surface: #171E2C; --surface2: #1E2637; --ink: #E9EDF5;
+    --muted: #98A2B8; --line: #2A3347; --accent: #7D96FF; --accent-soft: #232E4E;
+    --on-accent: #0F131C; --easy: #4CC38A; --easy-soft: #16301F; --med: #E2B155;
+    --med-soft: #33270E; --hard: #E5776A; --hard-soft: #371713; --done: #4CC38A; --miss: #333C4E;
+  }
+  * { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 14px 14px 90px; }
+  header.app {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 6px 2px 12px;
+  }
+  .brand { font-size: 16px; font-weight: bold; letter-spacing: .02em; }
+  .brand span { color: var(--accent); }
+  .streak { font-size: 12px; color: var(--muted); }
+  .streak b { font-size: 18px; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  nav.tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+  }
+  nav.tabs .inner { max-width: 560px; margin: 0 auto; display: flex; gap: 6px; }
+  nav.tabs button {
+    flex: 1; padding: 9px 4px; font: inherit; font-size: 12.5px;
+    background: transparent; color: var(--muted);
+    border: 1px solid transparent; border-radius: 8px; cursor: pointer;
+  }
+  nav.tabs button.on { background: var(--accent-soft); color: var(--accent); font-weight: bold; }
+  nav.tabs button:focus-visible, .card button:focus-visible, button:focus-visible, a:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  .datebar { display: flex; justify-content: space-between; align-items: center; margin: 2px 0 10px; }
+  .datebar .d { font-size: 12px; color: var(--muted); }
+  .weekstrip { display: flex; gap: 5px; }
+  .weekstrip .cell {
+    width: 16px; height: 16px; border-radius: 4px;
+    border: 1px solid var(--line); background: var(--surface);
+    display: grid; place-items: center; font-size: 10px; color: var(--on-accent);
+  }
+  .weekstrip .cell.done { background: var(--done); border-color: var(--done); }
+  .weekstrip .cell.miss { background: var(--miss); border-color: var(--miss); }
+  .weekstrip .cell.today { box-shadow: 0 0 0 2px var(--accent); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 12px 10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .card.required { border-left: 4px solid var(--accent); }
+  .card.bonus { border-left: 4px solid var(--line); }
+  .card .slot { font-size: 10.5px; color: var(--muted); margin-bottom: 6px; }
+  .card.required .slot { color: var(--accent); font-weight: bold; }
+  .card .toprow { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 4px; }
+  .chip {
+    display: inline-block; padding: 1px 7px; border-radius: 999px;
+    font-size: 10.5px; border: 1px solid var(--line); color: var(--muted); background: var(--surface2);
+  }
+  .chip.diff-E { background: var(--easy-soft); color: var(--easy); border-color: transparent; font-weight: bold; }
+  .chip.diff-M { background: var(--med-soft); color: var(--med); border-color: transparent; font-weight: bold; }
+  .chip.diff-H { background: var(--hard-soft); color: var(--hard); border-color: transparent; font-weight: bold; }
+  .chip.kind-revision { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+  .card .title-row { display: flex; align-items: flex-start; gap: 10px; }
+  .card .ptitle { flex: 1; font-size: 15px; font-weight: bold; line-height: 1.35; }
+  .card .ptitle a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .card .ptitle a:active { color: var(--accent); }
+  .card.solved .ptitle a { color: var(--muted); text-decoration: line-through; border-bottom: none; }
+  .tick {
+    width: 34px; height: 34px; flex: none; border-radius: 8px;
+    border: 2px solid var(--line); background: var(--surface);
+    display: grid; place-items: center; cursor: pointer;
+    font-size: 18px; color: transparent; padding: 0;
+  }
+  .card.solved .tick { background: var(--done); border-color: var(--done); color: var(--on-accent); }
+  .card .actions { display: flex; gap: 12px; margin-top: 8px; }
+  .linkbtn {
+    background: none; border: none; padding: 2px 0; font: inherit; font-size: 11.5px;
+    color: var(--muted); cursor: pointer; text-decoration: underline;
+  }
+  .note { font-size: 11.5px; color: var(--muted); margin: 4px 2px 0; }
+
+  .empty {
+    text-align: left; padding: 26px 4px 10px;
+  }
+  .empty h2 { font-size: 18px; margin: 0 0 8px; }
+  .empty p { color: var(--muted); margin: 0 0 16px; max-width: 40ch; }
+
+  .btn {
+    font: inherit; font-size: 13px; font-weight: bold;
+    background: var(--accent); color: var(--on-accent);
+    border: none; border-radius: 8px; padding: 10px 16px; cursor: pointer;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); font-weight: normal; }
+  .btn.small { padding: 6px 12px; font-size: 12px; }
+
+  h2.sec { font-size: 13px; margin: 18px 2px 8px; color: var(--muted); font-weight: bold; }
+
+  .patrow {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 11px 12px; margin-bottom: 8px;
+  }
+  .patrow .r1 { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .patrow .pname { font-weight: bold; font-size: 14px; }
+  .patrow .meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .phase { font-size: 10.5px; padding: 1px 7px; border-radius: 999px; flex: none; }
+  .phase.learning { background: var(--accent-soft); color: var(--accent); font-weight: bold; }
+  .phase.interleave { background: var(--med-soft); color: var(--med); }
+  .phase.maintain { background: var(--easy-soft); color: var(--easy); }
+  .bar { height: 4px; border-radius: 2px; background: var(--surface2); margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--easy); border-radius: 2px; }
+  .patrow .rowactions { display: flex; gap: 14px; margin-top: 8px; }
+
+  dialog {
+    border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+    background: var(--surface); color: var(--ink);
+    width: min(92vw, 420px); font-family: inherit;
+  }
+  dialog::backdrop { background: rgba(10,14,22,.45); }
+  dialog h3 { margin: 0 0 10px; font-size: 15px; }
+  .picklist button {
+    display: block; width: 100%; text-align: left; font: inherit;
+    background: var(--surface2); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 9px 11px; margin-bottom: 6px; cursor: pointer;
+  }
+  .picklist button small { color: var(--muted); }
+  dialog input[type=text], dialog input[type=url], dialog select {
+    width: 100%; font: inherit; padding: 8px 10px; margin: 4px 0 10px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: var(--surface2); color: var(--ink);
+  }
+  dialog label { font-size: 11.5px; color: var(--muted); }
+  .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+
+  .cal-head { display: flex; justify-content: space-between; align-items: center; margin: 4px 0 10px; }
+  .cal-head .m { font-weight: bold; font-size: 14px; }
+  .cal-head button {
+    font: inherit; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 4px 12px; cursor: pointer; color: var(--ink);
+  }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .cal-grid .dow { text-align: center; font-size: 10px; color: var(--muted); padding: 2px 0; }
+  .cal-cell {
+    aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--surface); position: relative; cursor: pointer;
+    display: grid; place-items: center; padding: 0; font: inherit; color: var(--ink);
+  }
+  .cal-cell.blank { border: none; background: transparent; cursor: default; }
+  .cal-cell .n { font-size: 11px; color: var(--muted); position: absolute; top: 3px; left: 5px; }
+  .cal-cell.done { background: var(--easy-soft); border-color: var(--done); }
+  .cal-cell .mark { font-size: 15px; color: var(--done); font-weight: bold; margin-top: 6px; }
+  .cal-cell.full .mark::after { content: "\2713"; margin-left: -4px; }
+  .cal-cell.miss { background: var(--surface2); }
+  .cal-cell.today { box-shadow: 0 0 0 2px var(--accent); }
+  .cal-cell.sel { box-shadow: 0 0 0 2px var(--med); }
+  .daydetail {
+    margin-top: 12px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 11px 12px; font-size: 12.5px;
+  }
+  .daydetail .di { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; }
+  .daydetail .ok { color: var(--done); font-weight: bold; }
+  .daydetail .no { color: var(--muted); }
+  .legend { display: flex; gap: 14px; margin-top: 12px; font-size: 11px; color: var(--muted); align-items: center; }
+  .legend .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; vertical-align: -2px; margin-right: 4px; }
+
+  .banner {
+    background: var(--med-soft); color: var(--med); border-radius: 8px;
+    padding: 8px 11px; font-size: 11.5px; margin-bottom: 12px;
+  }
+  .loading { padding: 60px 0; text-align: center; color: var(--muted); }
+  .stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .stat {
+    flex: 1; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 9px 11px;
+  }
+  .stat b { display: block; font-size: 19px; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 10.5px; color: var(--muted); }
+  @media (prefers-reduced-motion: no-preference) {
+    .tick, .cal-cell { transition: background-color .15s ease, border-color .15s ease; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="app">
+    <div class="brand">Pattern<span>Reps</span></div>
+    <div class="streak" id="streakBox"></div>
+  </header>
+  <div id="banner"></div>
+  <main id="main"><div class="loading">Loading your practice data&hellip;</div></main>
+</div>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="inner">
+    <button id="tab-today" class="on">Today</button>
+    <button id="tab-patterns">Patterns</button>
+    <button id="tab-calendar">Calendar</button>
+  </div>
+</nav>
+
+<dialog id="dlgAddPattern">
+  <h3>Add a pattern</h3>
+  <div class="picklist" id="patternPick"></div>
+  <label for="customName">Or create a custom pattern</label>
+  <input type="text" id="customName" placeholder="e.g. Monotonic Stack">
+  <div class="dlg-actions">
+    <button class="btn ghost small" id="dlgAddCancel">Close</button>
+    <button class="btn small" id="dlgAddCustom">Create custom</button>
+  </div>
+</dialog>
+
+<dialog id="dlgAddProblem">
+  <h3 id="dlgAPTitle">Add a problem</h3>
+  <label for="apUrl">LeetCode URL or slug</label>
+  <input type="url" id="apUrl" placeholder="https://leetcode.com/problems/two-sum/">
+  <label for="apTitle">Title (auto-filled from URL, editable)</label>
+  <input type="text" id="apTitle" placeholder="Two Sum">
+  <label for="apDiff">Difficulty</label>
+  <select id="apDiff">
+    <option value="E">Easy</option>
+    <option value="M" selected>Medium</option>
+    <option value="H">Hard</option>
+  </select>
+  <div class="dlg-actions">
+    <button class="btn ghost small" id="dlgAPCancel">Cancel</button>
+    <button class="btn small" id="dlgAPSave">Add problem</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+/* ============ Seeded problem pool (pattern-tagged, LeetCode-linked) ============ */
+const LC = s => "https://leetcode.com/problems/" + s + "/";
+function P(slug, title, diff){ return {slug, title, diff}; }
+const POOL = [
+ {key:"arrays-hashing", name:"Arrays & Hashing", problems:[
+  P("two-sum","Two Sum","E"), P("contains-duplicate","Contains Duplicate","E"),
+  P("valid-anagram","Valid Anagram","E"), P("majority-element","Majority Element","E"),
+  P("intersection-of-two-arrays","Intersection of Two Arrays","E"),
+  P("first-unique-character-in-a-string","First Unique Character in a String","E"),
+  P("group-anagrams","Group Anagrams","M"), P("top-k-frequent-elements","Top K Frequent Elements","M"),
+  P("longest-consecutive-sequence","Longest Consecutive Sequence","M"),
+  P("valid-sudoku","Valid Sudoku","M"),
+  P("concatenation-of-array","Concatenation of Array","E"),
+  P("isomorphic-strings","Isomorphic Strings","E"),
+  P("word-pattern","Word Pattern","E"),
+  P("happy-number","Happy Number","E"),
+  P("ransom-note","Ransom Note","E"),
+  P("find-all-numbers-disappeared-in-an-array","Find All Numbers Disappeared in an Array","E"),
+  P("set-mismatch","Set Mismatch","E"),
+  P("monotonic-array","Monotonic Array","E"),
+  P("find-the-difference","Find the Difference","E"),
+  P("roman-to-integer","Roman to Integer","E"),
+  P("longest-palindrome","Longest Palindrome","E"),
+  P("sort-an-array","Sort an Array","M"),
+  P("4sum-ii","4Sum II","M"),
+  P("insert-delete-getrandom-o1","Insert Delete GetRandom O(1)","M"),
+  P("integer-to-roman","Integer to Roman","M"),
+  P("next-permutation","Next Permutation","M"),
+  P("palindrome-number","Palindrome Number","E")]},
+ {key:"two-pointers", name:"Two Pointers", problems:[
+  P("valid-palindrome","Valid Palindrome","E"), P("remove-duplicates-from-sorted-array","Remove Duplicates from Sorted Array","E"),
+  P("move-zeroes","Move Zeroes","E"), P("merge-sorted-array","Merge Sorted Array","E"),
+  P("reverse-string","Reverse String","E"), P("is-subsequence","Is Subsequence","E"),
+  P("squares-of-a-sorted-array","Squares of a Sorted Array","E"),
+  P("two-sum-ii-input-array-is-sorted","Two Sum II — Sorted Array","M"),
+  P("3sum","3Sum","M"), P("container-with-most-water","Container With Most Water","M"),
+  P("sort-colors","Sort Colors","M"), P("boats-to-save-people","Boats to Save People","M"),
+  P("remove-element","Remove Element","E"),
+  P("reverse-vowels-of-a-string","Reverse Vowels of a String","E"),
+  P("intersection-of-two-arrays-ii","Intersection of Two Arrays II","E"),
+  P("long-pressed-name","Long Pressed Name","E"),
+  P("valid-palindrome-ii","Valid Palindrome II","E"),
+  P("3sum-closest","3Sum Closest","M"),
+  P("remove-duplicates-from-sorted-array-ii","Remove Duplicates from Sorted Array II","M"),
+  P("rotate-array","Rotate Array","M"),
+  P("valid-triangle-number","Valid Triangle Number","M"),
+  P("trapping-rain-water","Trapping Rain Water","H"),
+  P("max-number-of-k-sum-pairs","Max Number of K-Sum Pairs","M"),
+  P("4sum","4Sum","M")]},
+ {key:"sliding-window", name:"Sliding Window", problems:[
+  P("best-time-to-buy-and-sell-stock","Best Time to Buy and Sell Stock","E"),
+  P("maximum-average-subarray-i","Maximum Average Subarray I","E"),
+  P("contains-duplicate-ii","Contains Duplicate II","E"),
+  P("longest-substring-without-repeating-characters","Longest Substring Without Repeating Characters","M"),
+  P("longest-repeating-character-replacement","Longest Repeating Character Replacement","M"),
+  P("permutation-in-string","Permutation in String","M"),
+  P("minimum-size-subarray-sum","Minimum Size Subarray Sum","M"),
+  P("max-consecutive-ones-iii","Max Consecutive Ones III","M"),
+  P("fruit-into-baskets","Fruit Into Baskets","M"),
+  P("find-all-anagrams-in-a-string","Find All Anagrams in a String","M"),
+  P("max-consecutive-ones","Max Consecutive Ones","E"),
+  P("maximum-number-of-vowels-in-a-substring-of-given-length","Maximum Number of Vowels in a Substring","M"),
+  P("subarray-product-less-than-k","Subarray Product Less Than K","M"),
+  P("grumpy-bookstore-owner","Grumpy Bookstore Owner","M"),
+  P("longest-subarray-of-1s-after-deleting-one-element","Longest Subarray of 1's After Deleting One Element","M"),
+  P("minimum-window-substring","Minimum Window Substring","H"),
+  P("sliding-window-maximum","Sliding Window Maximum","H"),
+  P("longest-alternating-subarray","Longest Alternating Subarray","E"),
+  P("maximum-sum-of-distinct-subarrays-with-length-k","Maximum Sum of Distinct Subarrays With Length K","M")]},
+ {key:"prefix-sum", name:"Prefix Sum", problems:[
+  P("running-sum-of-1d-array","Running Sum of 1D Array","E"),
+  P("find-pivot-index","Find Pivot Index","E"),
+  P("range-sum-query-immutable","Range Sum Query — Immutable","E"),
+  P("find-the-highest-altitude","Find the Highest Altitude","E"),
+  P("subarray-sum-equals-k","Subarray Sum Equals K","M"),
+  P("contiguous-array","Contiguous Array","M"),
+  P("product-of-array-except-self","Product of Array Except Self","M"),
+  P("continuous-subarray-sum","Continuous Subarray Sum","M"),
+  P("range-sum-query-2d-immutable","Range Sum Query 2D — Immutable","M"),
+  P("left-and-right-sum-differences","Left and Right Sum Differences","E"),
+  P("minimum-value-to-get-positive-step-by-step-sum","Minimum Value to Get Positive Step by Step Sum","E"),
+  P("subarray-sums-divisible-by-k","Subarray Sums Divisible by K","M"),
+  P("number-of-ways-to-split-array","Number of Ways to Split Array","M"),
+  P("matrix-block-sum","Matrix Block Sum","M"),
+  P("shifting-letters-ii","Shifting Letters II","M"),
+  P("corporate-flight-bookings","Corporate Flight Bookings","M"),
+  P("maximum-population-year","Maximum Population Year","E"),
+  P("maximum-absolute-sum-of-any-subarray","Maximum Absolute Sum of Any Subarray","M")]},
+ {key:"stack", name:"Stack", problems:[
+  P("valid-parentheses","Valid Parentheses","E"), P("implement-queue-using-stacks","Implement Queue using Stacks","E"),
+  P("baseball-game","Baseball Game","E"), P("next-greater-element-i","Next Greater Element I","E"),
+  P("backspace-string-compare","Backspace String Compare","E"),
+  P("min-stack","Min Stack","M"), P("evaluate-reverse-polish-notation","Evaluate Reverse Polish Notation","M"),
+  P("daily-temperatures","Daily Temperatures","M"), P("asteroid-collision","Asteroid Collision","M"),
+  P("car-fleet","Car Fleet","M"),
+  P("remove-all-adjacent-duplicates-in-string","Remove All Adjacent Duplicates in String","E"),
+  P("make-the-string-great","Make The String Great","E"),
+  P("online-stock-span","Online Stock Span","M"),
+  P("remove-k-digits","Remove K Digits","M"),
+  P("decode-string","Decode String","M"),
+  P("simplify-path","Simplify Path","M"),
+  P("validate-stack-sequences","Validate Stack Sequences","M"),
+  P("largest-rectangle-in-histogram","Largest Rectangle in Histogram","H"),
+  P("basic-calculator","Basic Calculator","H")]},
+ {key:"binary-search", name:"Binary Search", problems:[
+  P("binary-search","Binary Search","E"), P("search-insert-position","Search Insert Position","E"),
+  P("first-bad-version","First Bad Version","E"), P("guess-number-higher-or-lower","Guess Number Higher or Lower","E"),
+  P("valid-perfect-square","Valid Perfect Square","E"),
+  P("search-a-2d-matrix","Search a 2D Matrix","M"), P("koko-eating-bananas","Koko Eating Bananas","M"),
+  P("find-minimum-in-rotated-sorted-array","Find Minimum in Rotated Sorted Array","M"),
+  P("search-in-rotated-sorted-array","Search in Rotated Sorted Array","M"),
+  P("find-peak-element","Find Peak Element","M"),
+  P("time-based-key-value-store","Time Based Key-Value Store","M"),
+  P("sqrtx","Sqrt(x)","E"),
+  P("arranging-coins","Arranging Coins","E"),
+  P("find-first-and-last-position-of-element-in-sorted-array","Find First and Last Position in Sorted Array","M"),
+  P("single-element-in-a-sorted-array","Single Element in a Sorted Array","M"),
+  P("peak-index-in-a-mountain-array","Peak Index in a Mountain Array","M"),
+  P("capacity-to-ship-packages-within-d-days","Capacity to Ship Packages Within D Days","M"),
+  P("search-in-rotated-sorted-array-ii","Search in Rotated Sorted Array II","M"),
+  P("median-of-two-sorted-arrays","Median of Two Sorted Arrays","H"),
+  P("split-array-largest-sum","Split Array Largest Sum","H")]},
+ {key:"linked-list", name:"Linked List", problems:[
+  P("reverse-linked-list","Reverse Linked List","E"), P("merge-two-sorted-lists","Merge Two Sorted Lists","E"),
+  P("linked-list-cycle","Linked List Cycle","E"), P("middle-of-the-linked-list","Middle of the Linked List","E"),
+  P("palindrome-linked-list","Palindrome Linked List","E"),
+  P("remove-duplicates-from-sorted-list","Remove Duplicates from Sorted List","E"),
+  P("reorder-list","Reorder List","M"), P("remove-nth-node-from-end-of-list","Remove Nth Node From End of List","M"),
+  P("add-two-numbers","Add Two Numbers","M"), P("copy-list-with-random-pointer","Copy List with Random Pointer","M"),
+  P("linked-list-cycle-ii","Linked List Cycle II","M"), P("swap-nodes-in-pairs","Swap Nodes in Pairs","M"),
+  P("remove-linked-list-elements","Remove Linked List Elements","E"),
+  P("intersection-of-two-linked-lists","Intersection of Two Linked Lists","E"),
+  P("odd-even-linked-list","Odd Even Linked List","M"),
+  P("rotate-list","Rotate List","M"),
+  P("partition-list","Partition List","M"),
+  P("sort-list","Sort List","M"),
+  P("lru-cache","LRU Cache","M"),
+  P("merge-k-sorted-lists","Merge k Sorted Lists","H"),
+  P("reverse-nodes-in-k-group","Reverse Nodes in k-Group","H")]},
+ {key:"trees-dfs", name:"Trees (DFS)", problems:[
+  P("maximum-depth-of-binary-tree","Maximum Depth of Binary Tree","E"),
+  P("invert-binary-tree","Invert Binary Tree","E"), P("same-tree","Same Tree","E"),
+  P("diameter-of-binary-tree","Diameter of Binary Tree","E"), P("balanced-binary-tree","Balanced Binary Tree","E"),
+  P("path-sum","Path Sum","E"), P("merge-two-binary-trees","Merge Two Binary Trees","E"),
+  P("subtree-of-another-tree","Subtree of Another Tree","E"),
+  P("validate-binary-search-tree","Validate Binary Search Tree","M"),
+  P("kth-smallest-element-in-a-bst","Kth Smallest Element in a BST","M"),
+  P("lowest-common-ancestor-of-a-binary-tree","Lowest Common Ancestor of a Binary Tree","M"),
+  P("construct-binary-tree-from-preorder-and-inorder-traversal","Construct Binary Tree from Preorder and Inorder","M"),
+  P("path-sum-ii","Path Sum II","M"), P("count-good-nodes-in-binary-tree","Count Good Nodes in Binary Tree","M"),
+  P("binary-tree-inorder-traversal","Binary Tree Inorder Traversal","E"),
+  P("binary-tree-paths","Binary Tree Paths","E"),
+  P("sum-of-left-leaves","Sum of Left Leaves","E"),
+  P("range-sum-of-bst","Range Sum of BST","E"),
+  P("lowest-common-ancestor-of-a-binary-search-tree","Lowest Common Ancestor of a BST","M"),
+  P("insert-into-a-binary-search-tree","Insert into a Binary Search Tree","M"),
+  P("delete-node-in-a-bst","Delete Node in a BST","M"),
+  P("flatten-binary-tree-to-linked-list","Flatten Binary Tree to Linked List","M"),
+  P("sum-root-to-leaf-numbers","Sum Root to Leaf Numbers","M"),
+  P("house-robber-iii","House Robber III","M"),
+  P("binary-tree-maximum-path-sum","Binary Tree Maximum Path Sum","H")]},
+ {key:"trees-bfs", name:"Trees (BFS)", problems:[
+  P("average-of-levels-in-binary-tree","Average of Levels in Binary Tree","E"),
+  P("minimum-depth-of-binary-tree","Minimum Depth of Binary Tree","E"),
+  P("cousins-in-binary-tree","Cousins in Binary Tree","E"), P("symmetric-tree","Symmetric Tree","E"),
+  P("binary-tree-level-order-traversal","Binary Tree Level Order Traversal","M"),
+  P("binary-tree-right-side-view","Binary Tree Right Side View","M"),
+  P("binary-tree-zigzag-level-order-traversal","Binary Tree Zigzag Level Order Traversal","M"),
+  P("populating-next-right-pointers-in-each-node","Populating Next Right Pointers in Each Node","M"),
+  P("binary-tree-level-order-traversal-ii","Binary Tree Level Order Traversal II","M"),
+  P("n-ary-tree-level-order-traversal","N-ary Tree Level Order Traversal","M"),
+  P("find-largest-value-in-each-tree-row","Find Largest Value in Each Tree Row","M"),
+  P("maximum-level-sum-of-a-binary-tree","Maximum Level Sum of a Binary Tree","M"),
+  P("deepest-leaves-sum","Deepest Leaves Sum","M"),
+  P("serialize-and-deserialize-binary-tree","Serialize and Deserialize Binary Tree","H")]},
+ {key:"graphs", name:"Graphs (BFS/DFS)", problems:[
+  P("flood-fill","Flood Fill","E"), P("find-if-path-exists-in-graph","Find if Path Exists in Graph","E"),
+  P("island-perimeter","Island Perimeter","E"),
+  P("number-of-islands","Number of Islands","M"), P("max-area-of-island","Max Area of Island","M"),
+  P("rotting-oranges","Rotting Oranges","M"), P("clone-graph","Clone Graph","M"),
+  P("course-schedule","Course Schedule","M"), P("keys-and-rooms","Keys and Rooms","M"),
+  P("01-matrix","01 Matrix","M"), P("surrounded-regions","Surrounded Regions","M"),
+  P("pacific-atlantic-water-flow","Pacific Atlantic Water Flow","M"),
+  P("number-of-provinces","Number of Provinces","M"),
+  P("shortest-path-in-binary-matrix","Shortest Path in Binary Matrix","M"),
+  P("number-of-closed-islands","Number of Closed Islands","M"),
+  P("count-sub-islands","Count Sub Islands","M"),
+  P("course-schedule-ii","Course Schedule II","M"),
+  P("redundant-connection","Redundant Connection","M"),
+  P("accounts-merge","Accounts Merge","M"),
+  P("evaluate-division","Evaluate Division","M"),
+  P("as-far-from-land-as-possible","As Far from Land as Possible","M"),
+  P("is-graph-bipartite","Is Graph Bipartite?","M"),
+  P("all-paths-from-source-to-target","All Paths From Source to Target","M"),
+  P("word-ladder","Word Ladder","H"),
+  P("map-of-highest-peak","Map of Highest Peak","M"),
+  P("number-of-operations-to-make-network-connected","Number of Operations to Make Network Connected","M")]},
+ {key:"backtracking", name:"Backtracking", problems:[
+  P("binary-watch","Binary Watch","E"),
+  P("subsets","Subsets","M"), P("permutations","Permutations","M"),
+  P("combination-sum","Combination Sum","M"), P("combinations","Combinations","M"),
+  P("letter-combinations-of-a-phone-number","Letter Combinations of a Phone Number","M"),
+  P("word-search","Word Search","M"), P("generate-parentheses","Generate Parentheses","M"),
+  P("subsets-ii","Subsets II","M"), P("palindrome-partitioning","Palindrome Partitioning","M"),
+  P("combination-sum-ii","Combination Sum II","M"),
+  P("combination-sum-iii","Combination Sum III","M"),
+  P("permutations-ii","Permutations II","M"),
+  P("restore-ip-addresses","Restore IP Addresses","M"),
+  P("letter-tile-possibilities","Letter Tile Possibilities","M"),
+  P("beautiful-arrangement","Beautiful Arrangement","M"),
+  P("n-queens","N-Queens","H")]},
+ {key:"heap", name:"Heap / Priority Queue", problems:[
+  P("kth-largest-element-in-a-stream","Kth Largest Element in a Stream","E"),
+  P("last-stone-weight","Last Stone Weight","E"), P("relative-ranks","Relative Ranks","E"),
+  P("kth-largest-element-in-an-array","Kth Largest Element in an Array","M"),
+  P("k-closest-points-to-origin","K Closest Points to Origin","M"),
+  P("sort-characters-by-frequency","Sort Characters By Frequency","M"),
+  P("task-scheduler","Task Scheduler","M"),
+  P("top-k-frequent-words","Top K Frequent Words","M"),
+  P("kth-smallest-element-in-a-sorted-matrix","Kth Smallest Element in a Sorted Matrix","M"),
+  P("reorganize-string","Reorganize String","M"),
+  P("furthest-building-you-can-reach","Furthest Building You Can Reach","M"),
+  P("find-k-pairs-with-smallest-sums","Find K Pairs with Smallest Sums","M"),
+  P("find-median-from-data-stream","Find Median from Data Stream","H")]},
+ {key:"dp-1d", name:"Dynamic Programming (1D)", problems:[
+  P("climbing-stairs","Climbing Stairs","E"), P("min-cost-climbing-stairs","Min Cost Climbing Stairs","E"),
+  P("fibonacci-number","Fibonacci Number","E"), P("pascals-triangle","Pascal's Triangle","E"),
+  P("n-th-tribonacci-number","N-th Tribonacci Number","E"),
+  P("house-robber","House Robber","M"), P("house-robber-ii","House Robber II","M"),
+  P("coin-change","Coin Change","M"), P("longest-increasing-subsequence","Longest Increasing Subsequence","M"),
+  P("word-break","Word Break","M"), P("maximum-subarray","Maximum Subarray","M"),
+  P("maximum-product-subarray","Maximum Product Subarray","M"),
+  P("decode-ways","Decode Ways","M"), P("unique-paths","Unique Paths","M"),
+  P("divisor-game","Divisor Game","E"),
+  P("delete-and-earn","Delete and Earn","M"),
+  P("perfect-squares","Perfect Squares","M"),
+  P("coin-change-ii","Coin Change II","M"),
+  P("partition-equal-subset-sum","Partition Equal Subset Sum","M"),
+  P("longest-palindromic-substring","Longest Palindromic Substring","M"),
+  P("palindromic-substrings","Palindromic Substrings","M"),
+  P("integer-break","Integer Break","M"),
+  P("triangle","Triangle","M"),
+  P("unique-paths-ii","Unique Paths II","M"),
+  P("longest-common-subsequence","Longest Common Subsequence","M"),
+  P("edit-distance","Edit Distance","H")]},
+ {key:"intervals", name:"Intervals", problems:[
+  P("summary-ranges","Summary Ranges","E"),
+  P("merge-intervals","Merge Intervals","M"), P("insert-interval","Insert Interval","M"),
+  P("non-overlapping-intervals","Non-overlapping Intervals","M"),
+  P("interval-list-intersections","Interval List Intersections","M"),
+  P("teemo-attacking","Teemo Attacking","E"),
+  P("minimum-number-of-arrows-to-burst-balloons","Minimum Number of Arrows to Burst Balloons","M"),
+  P("car-pooling","Car Pooling","M"),
+  P("my-calendar-i","My Calendar I","M"),
+  P("remove-covered-intervals","Remove Covered Intervals","M")]},
+ {key:"greedy", name:"Greedy", problems:[
+  P("assign-cookies","Assign Cookies","E"), P("lemonade-change","Lemonade Change","E"),
+  P("can-place-flowers","Can Place Flowers","E"),
+  P("jump-game","Jump Game","M"), P("jump-game-ii","Jump Game II","M"),
+  P("gas-station","Gas Station","M"), P("best-time-to-buy-and-sell-stock-ii","Best Time to Buy and Sell Stock II","M"),
+  P("partition-labels","Partition Labels","M"), P("hand-of-straights","Hand of Straights","M"),
+  P("maximum-units-on-a-truck","Maximum Units on a Truck","E"),
+  P("array-partition","Array Partition","E"),
+  P("two-city-scheduling","Two City Scheduling","M"),
+  P("largest-number","Largest Number","M"),
+  P("valid-parenthesis-string","Valid Parenthesis String","M"),
+  P("queue-reconstruction-by-height","Queue Reconstruction by Height","M"),
+  P("candy","Candy","H"),
+  P("minimum-number-of-food-buckets-to-feed-the-hamsters","Minimum Number of Food Buckets to Feed the Hamsters","M")]},
+ {key:"bits", name:"Bit Manipulation", problems:[
+  P("single-number","Single Number","E"), P("number-of-1-bits","Number of 1 Bits","E"),
+  P("counting-bits","Counting Bits","E"), P("reverse-bits","Reverse Bits","E"),
+  P("missing-number","Missing Number","E"), P("power-of-two","Power of Two","E"),
+  P("sum-of-two-integers","Sum of Two Integers","M"),
+  P("hamming-distance","Hamming Distance","E"),
+  P("complement-of-base-10-integer","Complement of Base 10 Integer","E"),
+  P("binary-number-with-alternating-bits","Binary Number with Alternating Bits","E"),
+  P("add-binary","Add Binary","E"),
+  P("bitwise-and-of-numbers-range","Bitwise AND of Numbers Range","M"),
+  P("single-number-iii","Single Number III","M"),
+  P("divide-two-integers","Divide Two Integers","M")]},
+ {key:"matrix", name:"Matrix", problems:[
+  P("transpose-matrix","Transpose Matrix","E"), P("matrix-diagonal-sum","Matrix Diagonal Sum","E"),
+  P("rotate-image","Rotate Image","M"), P("spiral-matrix","Spiral Matrix","M"),
+  P("set-matrix-zeroes","Set Matrix Zeroes","M"), P("game-of-life","Game of Life","M"),
+  P("reshape-the-matrix","Reshape the Matrix","E"),
+  P("flipping-an-image","Flipping an Image","E"),
+  P("lucky-numbers-in-a-matrix","Lucky Numbers in a Matrix","E"),
+  P("search-a-2d-matrix-ii","Search a 2D Matrix II","M"),
+  P("diagonal-traverse","Diagonal Traverse","M"),
+  P("image-smoother","Image Smoother","E")]},
+ {key:"tries", name:"Tries", problems:[
+  P("longest-common-prefix","Longest Common Prefix","E"),
+  P("implement-trie-prefix-tree","Implement Trie (Prefix Tree)","M"),
+  P("design-add-and-search-words-data-structure","Design Add and Search Words","M"),
+  P("replace-words","Replace Words","M"),
+  P("search-suggestions-system","Search Suggestions System","M"),
+  P("longest-word-in-dictionary","Longest Word in Dictionary","M"),
+  P("map-sum-pairs","Map Sum Pairs","M"),
+  P("word-search-ii","Word Search II","H")]}
+];
+const POOL_BY_KEY = {}; POOL.forEach(p => POOL_BY_KEY[p.key] = p);
+
+/* Solved-before-tracking seed (used on static hosting where the synced db is unavailable) */
+const SEED_PROGRESS = [
+ ["01-matrix","graphs"],
+ ["3sum","two-pointers"],
+ ["3sum-closest","two-pointers"],
+ ["4sum","two-pointers"],
+ ["best-time-to-buy-and-sell-stock","sliding-window"],
+ ["best-time-to-buy-and-sell-stock-ii","greedy"],
+ ["binary-tree-level-order-traversal","trees-bfs"],
+ ["binary-tree-level-order-traversal-ii","trees-bfs"],
+ ["car-pooling","intervals"],
+ ["clone-graph","graphs"],
+ ["coin-change","dp-1d"],
+ ["container-with-most-water","two-pointers"],
+ ["contiguous-array","prefix-sum"],
+ ["continuous-subarray-sum","prefix-sum"],
+ ["corporate-flight-bookings","prefix-sum"],
+ ["course-schedule","graphs"],
+ ["find-first-and-last-position-of-element-in-sorted-array","binary-search"],
+ ["find-minimum-in-rotated-sorted-array","binary-search"],
+ ["find-pivot-index","prefix-sum"],
+ ["flipping-an-image","matrix"],
+ ["house-robber","dp-1d"],
+ ["image-smoother","matrix"],
+ ["is-subsequence","two-pointers"],
+ ["linked-list-cycle","linked-list"],
+ ["longest-alternating-subarray","sliding-window"],
+ ["longest-common-prefix","tries"],
+ ["longest-repeating-character-replacement","sliding-window"],
+ ["longest-substring-without-repeating-characters","sliding-window"],
+ ["map-of-highest-peak","graphs"],
+ ["max-area-of-island","graphs"],
+ ["max-number-of-k-sum-pairs","two-pointers"],
+ ["maximum-absolute-sum-of-any-subarray","prefix-sum"],
+ ["maximum-average-subarray-i","sliding-window"],
+ ["maximum-population-year","prefix-sum"],
+ ["maximum-product-subarray","dp-1d"],
+ ["maximum-subarray","dp-1d"],
+ ["maximum-sum-of-distinct-subarrays-with-length-k","sliding-window"],
+ ["merge-sorted-array","two-pointers"],
+ ["merge-two-sorted-lists","linked-list"],
+ ["middle-of-the-linked-list","linked-list"],
+ ["minimum-number-of-food-buckets-to-feed-the-hamsters","greedy"],
+ ["minimum-size-subarray-sum","sliding-window"],
+ ["minimum-window-substring","sliding-window"],
+ ["next-permutation","arrays-hashing"],
+ ["number-of-islands","graphs"],
+ ["number-of-operations-to-make-network-connected","graphs"],
+ ["number-of-provinces","graphs"],
+ ["palindrome-number","arrays-hashing"],
+ ["permutation-in-string","sliding-window"],
+ ["product-of-array-except-self","prefix-sum"],
+ ["range-sum-query-immutable","prefix-sum"],
+ ["redundant-connection","graphs"],
+ ["remove-duplicates-from-sorted-array","two-pointers"],
+ ["remove-duplicates-from-sorted-list","linked-list"],
+ ["remove-element","two-pointers"],
+ ["reverse-linked-list","linked-list"],
+ ["rotate-image","matrix"],
+ ["running-sum-of-1d-array","prefix-sum"],
+ ["search-a-2d-matrix","binary-search"],
+ ["search-in-rotated-sorted-array","binary-search"],
+ ["search-in-rotated-sorted-array-ii","binary-search"],
+ ["shifting-letters-ii","prefix-sum"],
+ ["subarray-sum-equals-k","prefix-sum"],
+ ["subarray-sums-divisible-by-k","prefix-sum"],
+ ["transpose-matrix","matrix"],
+ ["trapping-rain-water","two-pointers"],
+ ["two-sum","arrays-hashing"],
+ ["two-sum-ii-input-array-is-sorted","two-pointers"],
+ ["valid-parentheses","stack"]
+];
+const SEED_DATE = "2026-09-12";
+
+/* ============ Deterministic RNG ============ */
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const rand = seed => mulberry32(hashStr(seed));
+
+/* ============ Dates ============ */
+function localDateStr(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), dd=String(d.getDate()).padStart(2,"0");
+  return y+"-"+m+"-"+dd;
+}
+function parseDate(s){const [y,m,d]=s.split("-").map(Number);return Date.UTC(y,m-1,d);}
+function daysBetween(a,b){return Math.round((parseDate(b)-parseDate(a))/86400000);}
+function addDays(s,n){const t=new Date(parseDate(s)+n*86400000);return t.toISOString().slice(0,10);}
+function prettyDate(s){
+  const [y,m,d]=s.split("-").map(Number);
+  const dt=new Date(y,m-1,d);
+  return dt.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+}
+const TODAY = localDateStr(new Date());
+
+/* ============ Storage (artifact db with local fallback) ============ */
+const Store = {
+  db: null, http: false, local: false,
+  async init(){
+    try{
+      if (window.claude && typeof window.claude.use === "function"){
+        const db = await Promise.race([
+          window.claude.use("db"),
+          new Promise(res => setTimeout(() => res(null), 12000))
+        ]);
+        if (db){ this.db = db; return; }
+      }
+    }catch(e){ /* fall through */ }
+    try{
+      const r = await fetch("api/ping", { cache: "no-store" });
+      if (r.ok){ const j = await r.json(); if (j && j.app === "pattern-reps"){ this.http = true; return; } }
+    }catch(e){ /* no local server; fall through */ }
+    this.local = true;
+  },
+  _lsKey(p){ return "patternreps/" + p; },
+  async get(path){
+    if (this.db){
+      try{ const s = await this.db.doc(path).get(); return s.exists ? s.data() : null; }
+      catch(e){ if(e && e.code==="unavailable"){ try{ const s=await this.db.doc(path).get(); return s.exists?s.data():null; }catch(_){ return null; } } return null; }
+    }
+    if (this.http){
+      try{ const r = await fetch("api/doc?path=" + encodeURIComponent(path), { cache: "no-store" });
+        const j = await r.json(); return j.exists ? j.data : null; }catch(e){ return null; }
+    }
+    try{ const v = localStorage.getItem(this._lsKey(path)); return v ? JSON.parse(v) : null; }catch(e){ return null; }
+  },
+  async set(path, data){
+    if (this.db){
+      try{ await this.db.doc(path).set(data); }
+      catch(e){ if(e && e.code==="unavailable"){ try{ await this.db.doc(path).set(data); }catch(_){} } else if(e && e.code==="quota_exceeded"){ showBanner("Storage is full — some data may not save."); } }
+      return;
+    }
+    if (this.http){
+      try{ await fetch("api/doc?path=" + encodeURIComponent(path),
+        { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }); }
+      catch(e){ showBanner("Could not reach the local server \u2014 is server.py still running?"); }
+      return;
+    }
+    try{ localStorage.setItem(this._lsKey(path), JSON.stringify(data)); }catch(e){}
+  },
+  async del(path){
+    if (this.db){ try{ await this.db.doc(path).delete(); }catch(e){} return; }
+    if (this.http){ try{ await fetch("api/doc?path=" + encodeURIComponent(path), { method: "DELETE" }); }catch(e){} return; }
+    try{ localStorage.removeItem(this._lsKey(path)); }catch(e){}
+  },
+  async list(col){
+    if (this.db){
+      try{ const s = await this.db.collection(col).get(); return s.docs.map(d => d.data()); }
+      catch(e){ return []; }
+    }
+    if (this.http){
+      try{ const r = await fetch("api/col?path=" + encodeURIComponent(col), { cache: "no-store" });
+        const j = await r.json(); return j.docs || []; }catch(e){ return []; }
+    }
+    const out=[]; const pre=this._lsKey(col)+"/";
+    try{
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);
+        if(k && k.startsWith(pre) && !k.slice(pre.length).includes("/")){
+          try{ out.push(JSON.parse(localStorage.getItem(k))); }catch(e){}
+        }
+      }
+    }catch(e){}
+    return out;
+  }
+};
+
+/* ============ App state ============ */
+const S = {
+  cats: [],            // [{key,name,added,custom}]
+  progress: {},        // slug -> {slug,key,solvedCount,lastSolved}
+  completions: {},     // date -> {date, solved:{slug:true}}
+  custom: [],          // [{slug,title,diff,key}]
+  assignment: null,    // today's {date, items:[{slug,key,kind}], catCount}
+  view: "today",
+  calMonth: TODAY.slice(0,7),
+  calSel: null
+};
+
+function problemsFor(key){
+  const base = POOL_BY_KEY[key] ? POOL_BY_KEY[key].problems : [];
+  const extra = S.custom.filter(c => c.key === key);
+  const seen = new Set(base.map(p => p.slug));
+  return base.concat(extra.filter(c => !seen.has(c.slug)));
+}
+function findProblem(slug){
+  for (const pat of POOL){ const hit = pat.problems.find(p => p.slug === slug); if (hit) return hit; }
+  const c = S.custom.find(c => c.slug === slug); return c || null;
+}
+function catName(key){
+  const c = S.cats.find(c => c.key === key); if (c) return c.name;
+  return POOL_BY_KEY[key] ? POOL_BY_KEY[key].name : key;
+}
+function isSolved(slug){ const p = S.progress[slug]; return !!(p && p.solvedCount > 0); }
+function solvedToday(slug){ const c = S.completions[TODAY]; return !!(c && c.solved && c.solved[slug]); }
+
+/* ============ Scheduler ============ */
+function phaseOf(cat, dateStr){
+  const d = daysBetween(cat.added, dateStr);
+  if (d <= 3) return "learning";
+  if (d <= 13) return "interleave";
+  return "maintain";
+}
+function isDue(cat, dateStr){
+  const p = phaseOf(cat, dateStr);
+  if (p === "learning") return true;
+  const r = rand("due|" + dateStr + "|" + cat.key)();
+  return p === "interleave" ? r < 0.55 : r < 0.35;
+}
+function generateAssignment(dateStr){
+  const items = [];
+  if (!S.cats.length) return { date: dateStr, items, catCount: 0 };
+  const r = rand("assign|" + dateStr);
+  const rankP = { learning: 0, interleave: 1, maintain: 2 };
+  let due = S.cats.filter(c => isDue(c, dateStr));
+  if (!due.length) due = [S.cats[Math.floor(r() * S.cats.length)]];
+  due.sort((a,b) => {
+    const pa = rankP[phaseOf(a,dateStr)], pb = rankP[phaseOf(b,dateStr)];
+    if (pa !== pb) return pa - pb;
+    return daysBetween(a.added, dateStr) - daysBetween(b.added, dateStr); // newest pattern first
+  });
+  const used = new Set();
+  const pickFor = (cat) => {
+    const phase = phaseOf(cat, dateStr);
+    const pool = problemsFor(cat.key).filter(p => !used.has(p.slug));
+    const unsolved = pool.filter(p => !isSolved(p.slug));
+    const revCands = pool.filter(p => {
+      const pr = S.progress[p.slug];
+      return pr && pr.solvedCount > 0 && pr.lastSolved && daysBetween(pr.lastSolved, dateStr) >= 4;
+    });
+    let kind = "new";
+    if (phase === "interleave" && revCands.length && r() < 0.35) kind = "revision";
+    if (phase === "maintain"  && revCands.length && r() < 0.5)  kind = "revision";
+    if (!unsolved.length && revCands.length) kind = "revision";
+    if (kind === "revision"){
+      revCands.sort((a,b) => parseDate(S.progress[a.slug].lastSolved) - parseDate(S.progress[b.slug].lastSolved));
+      const top = revCands.slice(0, 3);
+      return { p: top[Math.floor(r() * top.length)], kind };
+    }
+    if (!unsolved.length) return null;
+    let order;
+    if (phase === "maintain") order = r() < 0.5 ? ["M","E","H"] : ["E","M","H"];
+    else order = ["E","M","H"];
+    let cands = [];
+    for (const d of order){ cands = unsolved.filter(p => p.diff === d); if (cands.length) break; }
+    const top = cands.slice(0, 5);
+    return { p: top[Math.floor(r() * top.length)], kind: "new" };
+  };
+  let ci = 0, guard = 0;
+  while (items.length < 2 && guard < 16){
+    guard++;
+    if (!due.length) break;
+    const cat = due[ci % due.length]; ci++;
+    const got = pickFor(cat);
+    if (got){ used.add(got.p.slug); items.push({ slug: got.p.slug, key: cat.key, kind: got.kind }); }
+    if (ci >= due.length * 2) break;
+  }
+  if (items.length < 2){
+    for (const cat of S.cats){
+      if (items.length >= 2) break;
+      const got = pickFor(cat);
+      if (got){ used.add(got.p.slug); items.push({ slug: got.p.slug, key: cat.key, kind: got.kind }); }
+    }
+  }
+  return { date: dateStr, items, catCount: S.cats.length };
+}
+async function ensureAssignment(){
+  let a = await Store.get("assignments/" + TODAY);
+  if (a && a.catCount === S.cats.length){ S.assignment = a; return; }
+  const fresh = generateAssignment(TODAY);
+  if (a){
+    // preserve already-solved items so a mid-day regen never erases visible work
+    const keep = (a.items || []).filter(it => solvedToday(it.slug));
+    for (const k of keep){
+      if (!fresh.items.some(it => it.slug === k.slug)){
+        if (fresh.items.length >= 2) fresh.items.pop();
+        fresh.items.unshift(k);
+      }
+    }
+  }
+  S.assignment = fresh;
+  await Store.set("assignments/" + TODAY, fresh);
+}
+
+/* ============ Streak & day status ============ */
+function dayDone(dateStr){
+  const c = S.completions[dateStr];
+  return !!(c && c.solved && Object.keys(c.solved).length >= 1);
+}
+function dayFull(dateStr){
+  const c = S.completions[dateStr];
+  return !!(c && c.solved && Object.keys(c.solved).length >= 2);
+}
+function firstActiveDate(){
+  if (!S.cats.length) return null;
+  return S.cats.map(c => c.added).sort()[0];
+}
+function streakCount(){
+  let n = 0;
+  let d = dayDone(TODAY) ? TODAY : addDays(TODAY, -1);
+  while (dayDone(d)){ n++; d = addDays(d, -1); }
+  return n;
+}
+
+/* ============ Actions ============ */
+async function toggleSolved(slug, key){
+  const comp = S.completions[TODAY] || { date: TODAY, solved: {} };
+  if (comp.solved[slug]){
+    delete comp.solved[slug];
+    const pr = S.progress[slug];
+    if (pr){ pr.solvedCount = Math.max(0, pr.solvedCount - 1); await Store.set("progress/" + slug, pr); }
+  } else {
+    comp.solved[slug] = true;
+    const pr = S.progress[slug] || { slug, key, solvedCount: 0, lastSolved: null };
+    pr.solvedCount += 1; pr.lastSolved = TODAY; pr.key = key || pr.key;
+    S.progress[slug] = pr;
+    await Store.set("progress/" + slug, pr);
+  }
+  S.completions[TODAY] = comp;
+  await Store.set("completions/" + TODAY, comp);
+  render();
+}
+async function swapItem(idx){
+  const a = S.assignment;
+  const it = a.items[idx];
+  if (!it || solvedToday(it.slug)) return;
+  const r = rand("swap|" + TODAY + "|" + it.slug + "|" + Date.now());
+  const usedSlugs = new Set(a.items.map(x => x.slug));
+  const tryPick = (key) => {
+    const pool = problemsFor(key).filter(p => !usedSlugs.has(p.slug) && !isSolved(p.slug));
+    if (!pool.length) return null;
+    return pool[Math.floor(r() * pool.length)];
+  };
+  let np = tryPick(it.key), nk = it.key;
+  if (!np){
+    for (const c of S.cats){ np = tryPick(c.key); if (np){ nk = c.key; break; } }
+  }
+  if (!np){ showBanner("No unsolved problems left to swap in — add more to this pattern."); return; }
+  a.items[idx] = { slug: np.slug, key: nk, kind: "new" };
+  await Store.set("assignments/" + TODAY, a);
+  render();
+}
+async function addCategory(key, name){
+  if (S.cats.some(c => c.key === key)) return;
+  const cat = { key, name, added: TODAY, custom: !POOL_BY_KEY[key] };
+  S.cats.push(cat);
+  await Store.set("categories/" + key, cat);
+  S.assignment = null;
+  await ensureAssignment();
+  render();
+}
+async function removeCategory(key){
+  if (!confirm("Remove \u201C" + catName(key) + "\u201D from your rotation? Your solve history is kept.")) return;
+  S.cats = S.cats.filter(c => c.key !== key);
+  await Store.del("categories/" + key);
+  S.assignment = null;
+  await ensureAssignment();
+  render();
+}
+async function addCustomProblem(key, slug, title, diff){
+  const rec = { slug, title, diff, key };
+  S.custom = S.custom.filter(c => c.slug !== slug).concat([rec]);
+  await Store.set("customProblems/" + slug, rec);
+  render();
+}
+
+/* ============ Rendering ============ */
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function showBanner(msg){
+  $("banner").innerHTML = msg ? '<div class="banner">' + esc(msg) + "</div>" : "";
+  if (msg) setTimeout(() => { if ($("banner").textContent === msg) $("banner").innerHTML = ""; }, 6000);
+}
+const DIFF_NAME = { E: "Easy", M: "Medium", H: "Hard" };
+
+function render(){
+  renderStreak();
+  document.querySelectorAll("nav.tabs button").forEach(b => b.classList.remove("on"));
+  $("tab-" + S.view).classList.add("on");
+  if (S.view === "today") renderToday();
+  else if (S.view === "patterns") renderPatterns();
+  else renderCalendar();
+}
+function renderStreak(){
+  const n = streakCount();
+  $("streakBox").innerHTML = n > 0 ? "<b>" + n + "</b> day streak" : "no streak yet";
+}
+function weekStrip(){
+  const cells = [];
+  const first = firstActiveDate();
+  for (let i = 6; i >= 0; i--){
+    const d = addDays(TODAY, -i);
+    let cls = "cell", mark = "";
+    if (dayDone(d)){ cls += " done"; mark = "\u2713"; }
+    else if (first && d >= first && d < TODAY) cls += " miss";
+    if (d === TODAY) cls += " today";
+    cells.push('<span class="' + cls + '" title="' + d + '">' + mark + "</span>");
+  }
+  return '<div class="weekstrip">' + cells.join("") + "</div>";
+}
+function renderToday(){
+  const m = $("main");
+  if (!S.cats.length){
+    m.innerHTML =
+      '<div class="empty"><h2>Start your first pattern</h2>' +
+      "<p>Add the pattern you just learnt \u2014 say Two Pointers \u2014 and you\u2019ll get daily problems for it: a few days straight to make it stick, then interleaved with revision, then medium-level mixes.</p>" +
+      '<button class="btn" id="emptyAdd">Add a pattern</button></div>';
+    $("emptyAdd").onclick = () => { S.view = "patterns"; render(); openAddPattern(); };
+    return;
+  }
+  const a = S.assignment || { items: [] };
+  let html = '<div class="datebar"><span class="d">' + esc(prettyDate(TODAY)) + "</span>" + weekStrip() + "</div>";
+  if (!a.items.length){
+    html += '<div class="empty"><p>Nothing scheduled \u2014 every problem in your patterns is solved. Add a new pattern or more problems.</p></div>';
+  }
+  a.items.forEach((it, idx) => {
+    const p = findProblem(it.slug) || { slug: it.slug, title: it.slug, diff: "M" };
+    const done = solvedToday(it.slug);
+    const required = idx === 0;
+    html +=
+      '<div class="card ' + (required ? "required" : "bonus") + (done ? " solved" : "") + '">' +
+      '<div class="slot">' + (required ? "Counts for today" : "Bonus \u2014 optional") + "</div>" +
+      '<div class="toprow">' +
+        '<span class="chip">' + esc(catName(it.key)) + "</span>" +
+        '<span class="chip diff-' + p.diff + '">' + DIFF_NAME[p.diff] + "</span>" +
+        (it.kind === "revision" ? '<span class="chip kind-revision">Revisit</span>' : "") +
+      "</div>" +
+      '<div class="title-row">' +
+        '<div class="ptitle"><a href="' + LC(p.slug) + '" target="_blank" rel="noopener">' + esc(p.title) + "</a></div>" +
+        '<button class="tick" data-slug="' + esc(it.slug) + '" data-key="' + esc(it.key) + '" aria-label="Mark solved">\u2713</button>' +
+      "</div>" +
+      '<div class="actions">' +
+        (done ? "" : '<button class="linkbtn" data-swap="' + idx + '">Swap for another</button>') +
+      "</div></div>";
+  });
+  html += '<p class="note">Solve the first one to keep the streak. The bonus is extra credit \u2014 anything you skip goes back into the pool for another day.</p>';
+  m.innerHTML = html;
+  m.querySelectorAll(".tick").forEach(b => b.onclick = () => toggleSolved(b.dataset.slug, b.dataset.key));
+  m.querySelectorAll("[data-swap]").forEach(b => b.onclick = () => swapItem(Number(b.dataset.swap)));
+}
+function renderPatterns(){
+  const m = $("main");
+  const totalSolved = Object.values(S.progress).filter(p => p.solvedCount > 0).length;
+  let html =
+    '<div class="stat-row">' +
+      '<div class="stat"><b>' + S.cats.length + "</b><span>patterns active</span></div>" +
+      '<div class="stat"><b>' + totalSolved + "</b><span>problems solved</span></div>" +
+      '<div class="stat"><b>' + streakCount() + "</b><span>day streak</span></div>" +
+    "</div>" +
+    '<button class="btn" id="btnAddPattern">Add a pattern</button>' +
+    (!Store.db
+      ? '<div class="rowactions" style="margin-top:10px">' +
+        '<button class="linkbtn" id="btnExport">Export backup</button>' +
+        '<button class="linkbtn" id="btnImport">Import backup</button>' +
+        '<input type="file" id="importFile" accept="application/json" style="display:none">' +
+        '</div><p class="note">' + (Store.http
+          ? 'Progress is saved to data/store.json next to the app \u2014 browser cleanups can\u2019t touch it.'
+          : 'On this site, progress lives in this browser. Export a backup to carry it to another device.') + '</p>'
+      : '') +
+    '<h2 class="sec">Your rotation</h2>';
+  if (!S.cats.length) html += '<p class="note">No patterns yet. Add the first one you\u2019ve learnt.</p>';
+  const sorted = S.cats.slice().sort((a,b) => a.added < b.added ? 1 : -1);
+  for (const c of sorted){
+    const phase = phaseOf(c, TODAY);
+    const days = daysBetween(c.added, TODAY);
+    const pool = problemsFor(c.key);
+    const solved = pool.filter(p => isSolved(p.slug)).length;
+    const pct = pool.length ? Math.round(solved / pool.length * 100) : 0;
+    const phaseLabel = phase === "learning" ? "Learning \u2014 daily" : phase === "interleave" ? "Interleaving" : "Maintaining";
+    html +=
+      '<div class="patrow"><div class="r1"><span class="pname">' + esc(c.name) + '</span>' +
+      '<span class="phase ' + phase + '">' + phaseLabel + "</span></div>" +
+      '<div class="meta">Day ' + (days + 1) + " \u00B7 " + solved + " of " + pool.length + " solved</div>" +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="rowactions">' +
+        '<button class="linkbtn" data-addprob="' + esc(c.key) + '">Add problem</button>' +
+        '<button class="linkbtn" data-rmcat="' + esc(c.key) + '">Remove</button>' +
+      "</div></div>";
+  }
+  const inactive = POOL.filter(p => !S.cats.some(c => c.key === p.key));
+  if (inactive.length){
+    html += '<h2 class="sec">In the library, not yet started</h2><p class="note">' +
+      inactive.map(p => esc(p.name)).join(" \u00B7 ") + "</p>";
+  }
+  m.innerHTML = html;
+  $("btnAddPattern").onclick = openAddPattern;
+  if (!Store.db){
+    $("btnExport").onclick = exportBackup;
+    $("btnImport").onclick = () => $("importFile").click();
+    $("importFile").onchange = e => { if (e.target.files[0]) importBackup(e.target.files[0]); };
+  }
+  m.querySelectorAll("[data-addprob]").forEach(b => b.onclick = () => openAddProblem(b.dataset.addprob));
+  m.querySelectorAll("[data-rmcat]").forEach(b => b.onclick = () => removeCategory(b.dataset.rmcat));
+}
+function renderCalendar(){
+  const m = $("main");
+  const [y, mo] = S.calMonth.split("-").map(Number);
+  const firstDow = new Date(y, mo - 1, 1).getDay();
+  const daysIn = new Date(y, mo, 0).getDate();
+  const monthName = new Date(y, mo - 1, 1).toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  const firstA = firstActiveDate();
+  let html =
+    '<div class="cal-head"><button id="calPrev" aria-label="Previous month">\u2039</button>' +
+    '<span class="m">' + esc(monthName) + "</span>" +
+    '<button id="calNext" aria-label="Next month">\u203A</button></div>' +
+    '<div class="cal-grid">';
+  ["S","M","T","W","T","F","S"].forEach(d => html += '<span class="dow">' + d + "</span>");
+  for (let i = 0; i < firstDow; i++) html += '<span class="cal-cell blank"></span>';
+  for (let d = 1; d <= daysIn; d++){
+    const ds = S.calMonth + "-" + String(d).padStart(2, "0");
+    let cls = "cal-cell", mark = "";
+    if (dayDone(ds)){ cls += " done" + (dayFull(ds) ? " full" : ""); mark = '<span class="mark">\u2713</span>'; }
+    else if (firstA && ds >= firstA && ds < TODAY) cls += " miss";
+    if (ds === TODAY) cls += " today";
+    if (ds === S.calSel) cls += " sel";
+    html += '<button class="' + cls + '" data-day="' + ds + '"><span class="n">' + d + "</span>" + mark + "</button>";
+  }
+  html += "</div>";
+  html +=
+    '<div class="legend">' +
+    '<span><span class="sw" style="background:var(--easy-soft);border:1px solid var(--done)"></span>1 solved</span>' +
+    '<span><span class="sw" style="background:var(--easy-soft);border:1px solid var(--done)"></span>\u2713\u2713 both solved</span>' +
+    '<span><span class="sw" style="background:var(--surface2);border:1px solid var(--line)"></span>missed</span>' +
+    "</div>";
+  html += '<div id="dayDetail"></div>';
+  m.innerHTML = html;
+  $("calPrev").onclick = () => { S.calMonth = shiftMonth(S.calMonth, -1); S.calSel = null; render(); };
+  $("calNext").onclick = () => { S.calMonth = shiftMonth(S.calMonth, 1); S.calSel = null; render(); };
+  m.querySelectorAll(".cal-cell[data-day]").forEach(b => b.onclick = () => { S.calSel = b.dataset.day; render(); });
+  if (S.calSel && S.calSel.startsWith(S.calMonth)) renderDayDetail(S.calSel);
+}
+function shiftMonth(ym, delta){
+  let [y, m] = ym.split("-").map(Number);
+  m += delta; if (m < 1){ m = 12; y--; } if (m > 12){ m = 1; y++; }
+  return y + "-" + String(m).padStart(2, "0");
+}
+async function renderDayDetail(ds){
+  const box = $("dayDetail");
+  if (!box) return;
+  box.innerHTML = '<div class="daydetail">Loading&hellip;</div>';
+  const a = await Store.get("assignments/" + ds);
+  const comp = S.completions[ds];
+  const solvedSlugs = comp && comp.solved ? Object.keys(comp.solved) : [];
+  let rows = "";
+  if (a && a.items && a.items.length){
+    for (const it of a.items){
+      const p = findProblem(it.slug) || { title: it.slug, diff: "M" };
+      const ok = solvedSlugs.includes(it.slug);
+      rows += '<div class="di"><span>' + esc(p.title) + ' <small style="color:var(--muted)">' + esc(catName(it.key)) + "</small></span>" +
+        '<span class="' + (ok ? "ok" : "no") + '">' + (ok ? "solved" : "\u2014") + "</span></div>";
+    }
+    for (const s of solvedSlugs){
+      if (!a.items.some(it => it.slug === s)){
+        const p = findProblem(s) || { title: s };
+        rows += '<div class="di"><span>' + esc(p.title) + "</span><span class=\"ok\">solved</span></div>";
+      }
+    }
+  } else if (solvedSlugs.length){
+    for (const s of solvedSlugs){
+      const p = findProblem(s) || { title: s };
+      rows += '<div class="di"><span>' + esc(p.title) + '</span><span class="ok">solved</span></div>';
+    }
+  } else {
+    rows = '<div class="di"><span style="color:var(--muted)">No assignment recorded for this day.</span></div>';
+  }
+  box.innerHTML = '<div class="daydetail"><b>' + esc(prettyDate(ds)) + "</b>" + rows + "</div>";
+}
+
+/* ============ Dialogs ============ */
+function openAddPattern(){
+  const dlg = $("dlgAddPattern");
+  const pick = $("patternPick");
+  const avail = POOL.filter(p => !S.cats.some(c => c.key === p.key));
+  pick.innerHTML = avail.length
+    ? avail.map(p => '<button data-key="' + esc(p.key) + '">' + esc(p.name) +
+        ' <small>\u2014 ' + p.problems.length + " problems seeded</small></button>").join("")
+    : '<p class="note">All library patterns are already in your rotation.</p>';
+  pick.querySelectorAll("button[data-key]").forEach(b => b.onclick = async () => {
+    dlg.close();
+    await addCategory(b.dataset.key, POOL_BY_KEY[b.dataset.key].name);
+    S.view = "today"; render();
+    showBanner("Added \u2014 it\u2019s in today\u2019s rotation. Daily problems for the first few days.");
+  });
+  $("customName").value = "";
+  dlg.showModal();
+}
+$("dlgAddCancel").onclick = () => $("dlgAddPattern").close();
+$("dlgAddCustom").onclick = async () => {
+  const name = $("customName").value.trim();
+  if (!name) return;
+  let key = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  if (!key) return;
+  if (S.cats.some(c => c.key === key) || POOL_BY_KEY[key]) key += "-custom";
+  $("dlgAddPattern").close();
+  await addCategory(key, name);
+  showBanner("Custom pattern added \u2014 now add a few problems to it from the Patterns tab.");
+  S.view = "patterns"; render();
+};
+let addProbKey = null;
+function openAddProblem(key){
+  addProbKey = key;
+  $("dlgAPTitle").textContent = "Add a problem to " + catName(key);
+  $("apUrl").value = ""; $("apTitle").value = "";
+  $("dlgAddProblem").showModal();
+}
+$("apUrl").addEventListener("input", () => {
+  const slug = slugFromUrl($("apUrl").value);
+  if (slug && !$("apTitle").value){
+    $("apTitle").value = slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  }
+});
+function slugFromUrl(v){
+  v = v.trim();
+  const m = v.match(/leetcode\.com\/problems\/([a-z0-9-]+)/i);
+  if (m) return m[1].toLowerCase();
+  if (/^[a-z0-9-]+$/i.test(v)) return v.toLowerCase();
+  return null;
+}
+$("dlgAPCancel").onclick = () => $("dlgAddProblem").close();
+$("dlgAPSave").onclick = async () => {
+  const slug = slugFromUrl($("apUrl").value);
+  const title = $("apTitle").value.trim();
+  if (!slug || !title){ showBanner("Enter a LeetCode URL (or slug) and a title."); return; }
+  $("dlgAddProblem").close();
+  await addCustomProblem(addProbKey, slug, title, $("apDiff").value);
+  showBanner("Problem added to " + catName(addProbKey) + ".");
+};
+
+/* ============ Local-mode seed, export & import ============ */
+async function seedLocalProgress(){
+  if (Store.db) return;
+  if (Store.http){
+    try{
+      const r = await fetch("api/docs", { cache: "no-store" });
+      const all = await r.json();
+      if (Object.keys(all).length) return; // server file already has data
+      // First run against the server: move any existing browser data into the file
+      let moved = 0;
+      try{
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++){
+          const k = localStorage.key(i);
+          if (k && k.startsWith("patternreps/") && k !== "patternreps/seeded") keys.push(k);
+        }
+        for (const k of keys){
+          const path = k.slice("patternreps/".length);
+          const v = JSON.parse(localStorage.getItem(k));
+          if (v && typeof v === "object"){ await Store.set(path, v); moved++; }
+        }
+      }catch(e){}
+      if (moved){ showBanner("Moved " + moved + " records from browser storage into data/store.json."); return; }
+      for (const [slug, key] of SEED_PROGRESS){
+        await Store.set("progress/" + slug, { slug, key, solvedCount: 1, lastSolved: SEED_DATE });
+      }
+    }catch(e){}
+    return;
+  }
+  let flag = null;
+  try{ flag = localStorage.getItem("patternreps/seeded"); }catch(e){}
+  if (flag) return;
+  const existing = await Store.list("progress");
+  if (!existing.length){
+    for (const [slug, key] of SEED_PROGRESS){
+      await Store.set("progress/" + slug, { slug, key, solvedCount: 1, lastSolved: SEED_DATE });
+    }
+  }
+  try{ localStorage.setItem("patternreps/seeded", "1"); }catch(e){}
+}
+async function exportBackup(){
+  const [cats, prog, comps, custom] = await Promise.all([
+    Store.list("categories"), Store.list("progress"),
+    Store.list("completions"), Store.list("customProblems")
+  ]);
+  const payload = { app: "pattern-reps", version: 1, exported: new Date().toISOString(),
+    categories: cats, progress: prog, completions: comps, customProblems: custom };
+  const blob = new Blob([JSON.stringify(payload, null, 1)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "pattern-reps-backup.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function importBackup(file){
+  let data;
+  try{ data = JSON.parse(await file.text()); }
+  catch(e){ showBanner("That file is not a valid backup."); return; }
+  if (!data || data.app !== "pattern-reps"){ showBanner("That file is not a Pattern Reps backup."); return; }
+  for (const c of (data.categories || [])) if (c && c.key) await Store.set("categories/" + c.key, c);
+  for (const p of (data.progress || [])) if (p && p.slug) await Store.set("progress/" + p.slug, p);
+  for (const c of (data.completions || [])) if (c && c.date) await Store.set("completions/" + c.date, c);
+  for (const c of (data.customProblems || [])) if (c && c.slug) await Store.set("customProblems/" + c.slug, c);
+  try{ localStorage.setItem("patternreps/seeded", "1"); }catch(e){}
+  location.reload();
+}
+
+/* ============ Tabs & boot ============ */
+$("tab-today").onclick = () => { S.view = "today"; render(); };
+$("tab-patterns").onclick = () => { S.view = "patterns"; render(); };
+$("tab-calendar").onclick = () => { S.view = "calendar"; render(); };
+
+(async function boot(){
+  await Store.init();
+  await seedLocalProgress();
+  const [cats, prog, comps, custom] = await Promise.all([
+    Store.list("categories"), Store.list("progress"),
+    Store.list("completions"), Store.list("customProblems")
+  ]);
+  S.cats = (cats || []).filter(c => c && c.key);
+  (prog || []).forEach(p => { if (p && p.slug) S.progress[p.slug] = p; });
+  (comps || []).forEach(c => { if (c && c.date) S.completions[c.date] = c; });
+  S.custom = (custom || []).filter(c => c && c.slug);
+  await ensureAssignment();
+  render();
+})();
+</script>
+</body>
+</html>
